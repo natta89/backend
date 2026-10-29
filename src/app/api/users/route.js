@@ -1,32 +1,75 @@
+// นำเข้า NextResponse จาก next/server เพื่อใช้จัดการและส่งค่า HTTP Response กลับไปยังไคลเอนต์
 import { NextResponse } from "next/server";
 
-// Function GET
+//================================================================================
+// GET Function
+//================================================================================
+/**
+ * Route Handler สำหรับ HTTP Method: GET
+ * ทำหน้าที่รองรับ Request แบบ GET ที่เข้ามายัง Endpoint นี้
+ */
 export async function GET() {
   try {
-    const successMessage = "ดึงข้อมูลผู้ใช้สำเร็จ";
+    // พิมพ์ Log ข้อความลงในฝั่งเซิร์ฟเวอร์ (Server Console) เพื่อใช้ในการ Monitor หรือ Debug
+    console.log({ success: true, message: "ดึงข้อมูลผู้ใช้สำเร็จ", status: 200 });
 
-    // ปริ้นท์ข้อความลง Terminal (Server Console)
-    console.log("[GET /api/users] Success:", successMessage);
-
+    // ส่ง Response กลับไปยังฝั่ง Client ในรูปแบบ JSON
+    // - Argument แรก: ข้อมูล Body ที่ต้องการส่งกลับไป
+    // - Argument ที่สอง: การตั้งค่า HTTP Status Code (200 OK)
     return NextResponse.json(
       {
         success: true,
-        message: successMessage,
+        message: "ดึงข้อมูลผู้ใช้สำเร็จ",
       },
       { status: 200 }
     );
   } catch (error) {
-    const errorMessage =
-      error instanceof Error ? error.message : "Internal Server Error";
-
-    // ปริ้นท์ข้อผิดพลาดลง Terminal (Server Console)
-    console.error("[GET /api/users] Error:", errorMessage);
-
+    // ดักจับ Error ที่อาจเกิดขึ้นระหว่างการทำงานใน try block
+    // พร้อมส่ง HTTP Response แจ้งเตือนข้อผิดพลาดกลับไปยัง Client ด้วย Status 500 (Internal Server Error)
     return NextResponse.json(
       {
         success: false,
         message: "เกิดข้อผิดพลาดภายในเซิร์ฟเวอร์",
-        error: errorMessage,
+        error: error instanceof Error ? error.message : "Internal Server Error",
+      },
+      { status: 500 }
+    );
+  }
+}
+
+//================================================================================
+// POST Function
+//================================================================================
+/**
+ * Route Handler สำหรับ HTTP Method: POST
+ * ทำหน้าที่รองรับ Request แบบ POST ที่เข้ามายัง Endpoint นี้
+ */
+export async function POST(request) {
+  try {
+    // สามารถอ่านข้อมูล Body ที่ส่งมาจาก Client ผ่าน request.json() ได้ที่นี่
+    // const body = await request.json();
+
+    // พิมพ์ Log ข้อความลงในฝั่งเซิร์ฟเวอร์ (Server Console) เพื่อใช้ในการ Monitor หรือ Debug
+    console.log({ success: true, message: "เพิ่มผู้ใช้สำเร็จ", status: 201 });
+
+    // ส่ง Response กลับไปยังฝั่ง Client ในรูปแบบ JSON
+    // - Argument แรก: ข้อมูล Body ที่ต้องการส่งกลับไป
+    // - Argument ที่สอง: การตั้งค่า HTTP Status Code (201 Created)
+    return NextResponse.json(
+      {
+        success: true,
+        message: "เพิ่มผู้ใช้สำเร็จ",
+      },
+      { status: 201 }
+    );
+  } catch (error) {
+    // ดักจับ Error ที่อาจเกิดขึ้นระหว่างการทำงานใน try block
+    // พร้อมส่ง HTTP Response แจ้งเตือนข้อผิดพลาดกลับไปยัง Client ด้วย Status 500 (Internal Server Error)
+    return NextResponse.json(
+      {
+        success: false,
+        message: "เกิดข้อผิดพลาดภายในเซิร์ฟเวอร์",
+        error: error instanceof Error ? error.message : "Internal Server Error",
       },
       { status: 500 }
     );
